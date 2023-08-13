@@ -26,7 +26,7 @@ router.post("/get-all-bids", authMiddleware, async (req, res) => {
       .populate("product")
       .populate("buyer")
       .populate("seller");
-      res.send({success:false,data:bids});
+      res.send({success:true,data:bids});
   } catch (error) {
     res.send({ success: false, message: error.message });
   }
