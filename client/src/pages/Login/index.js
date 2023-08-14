@@ -6,10 +6,22 @@ import { LoginUser } from '../../apicalls/users'
 import { SetLoader } from '../../redux/loaderSlide'
 import { useDispatch } from 'react-redux'
 
-const rules=[{
-  required: true,
-  message: "required",
-},]
+const email_rules = [
+  {
+    required: true,
+    message: "required",
+  },
+  {
+    type: "email",
+    message: "Enter valid email"
+  }
+];
+const pass_rules = [
+  {
+    required: true,
+    message: "required",
+  },{min: 3}
+];
 
 
 
@@ -47,10 +59,10 @@ function Login() {
         <h1 className='text-primary text-2xl'>SCRAPG - <span className='text-gray-400 text-2xl'>LOGIN</span></h1>
         <Divider/>
         <Form layout='vertical' onFinish={onFinish}>
-          <Form.Item label='Email' name='email' rules={rules}>
+          <Form.Item label='Email' name='email' rules={email_rules}>
             <Input placeholder='Email'/>
           </Form.Item>
-          <Form.Item label='Password' name='password' rules={rules}>
+          <Form.Item label='Password' name='password' rules={pass_rules}>
             <Input type='password' placeholder='Password'/>
           </Form.Item>
           <Button className='mt-2' type='primary' htmlType='submit' block>

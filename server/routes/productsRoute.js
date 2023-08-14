@@ -1,13 +1,28 @@
 const router=require('express').Router();
 const Product=require('../models/productModel');
+const User=require("../models/userModel")
 const authMiddleware = require("../middlewares/authMiddleware"); 
 const cloudinary=require("../config/cloudinaryConfig");
 const multer=require("multer");
+const Notification=require("../models/notificationsModel");
 //add a new product
 router.post("/add-product",authMiddleware,async(req,res)=>{
     try {
         const newProduct=new Product(req.body);
+        const user=await User.findById(req.body.userId);;
         await newProduct.save();
+        //send notification to admin
+        const admins=await User.find({role: "admin"});
+        admins.forEach(async(admin)=>{
+          const newNotification=new Notification({
+            user: admin._id,
+            message: `New product added by ${user.name}`,
+            title:"New Product",
+            onClick:'/admin',
+            read: false
+          });
+          await newNotification.save();
+        })
         res.send({
             success: true,
             message: "Item added successfully"
@@ -23,10 +38,25 @@ router.post("/add-product",authMiddleware,async(req,res)=>{
 //get-all-products
 router.post('/get-products',async(req,res)=>{
     try {
-      const {seller,categories=[],weight=[]}=req.body
+      const {seller,category=[],weight=[],status}=req.body
       let filters={}
       if(seller){
         filters.seller=seller;
+      }
+      if(status){
+        filters.status=status;
+      }
+      //filter by category
+      if(category.length>0){
+        filters.category={$in: category};
+      }
+      //filter by age
+      if(weight.length>0){
+        weight.forEach((item) => {
+          const fromWeight=item.split("-")[0];
+          const toWeight=item.split("-")[1];
+          filters.weight={$gte:fromWeight,$lte:toWeight};
+        });
       }
         const products=await Product.find(filters).populate('seller').sort({createdAt: -1});
         res.send({
@@ -123,7 +153,16 @@ router.post("/upload-image-to-product",authMiddleware,multer({storage:storage}).
 router.put("/update-product-status/:id",authMiddleware,async(req,res)=>{
   try{
     const {status}=req.body;
-    await Product.findByIdAndUpdate(req.params.id,{status});
+    const updatedProduct=await Product.findByIdAndUpdate(req.params.id,{status});
+    //send notification to seller
+    const newNotification=new Notification({
+      user: updatedProduct.seller,
+      message: `Your product ${updatedProduct.name} has been ${status}`,
+      title: "Product status updated",
+      onClick: '/profile',
+      read: false
+    });
+    await newNotification.save();
     res.send({
       success: true,
       message: "Product status updated successfully",
