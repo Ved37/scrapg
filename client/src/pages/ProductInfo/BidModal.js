@@ -13,6 +13,10 @@ function BidModal({ showBidModal, setShowBidModal, product, reloadData }) {
         required: true,
         message: "Required"
     }]
+    const mobile_rules=[{
+      required: true,
+      message: "Required"
+  },{max:10},{min:10}]
     const dispatch=useDispatch();
     const onFinish=async(values)=>{
         try {
@@ -29,7 +33,7 @@ function BidModal({ showBidModal, setShowBidModal, product, reloadData }) {
               //send notification to seller
               await AddNotification({
                 title: "New bid placed",
-                message: `A new bid has been placed on your product ${product.name} by ${user.name} for ₹${values.bidAmount}`,
+                message: `A new bid has been placed on your item ${product.name} by ${user.name} for ₹${values.bidAmount}`,
                 user: product.seller._id,
                 onClick: '/profile',
                 read: false
@@ -60,7 +64,7 @@ function BidModal({ showBidModal, setShowBidModal, product, reloadData }) {
             <Form.Item label="Message" name='message' rules={rules}>
                 <Input.TextArea/>
             </Form.Item>
-            <Form.Item label="Mobile" name='mobile' rules={rules}>
+            <Form.Item label="Mobile" name='mobile' rules={mobile_rules}>
                 <Input type='number'/>
             </Form.Item>
         </Form>

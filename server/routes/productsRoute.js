@@ -16,8 +16,8 @@ router.post("/add-product",authMiddleware,async(req,res)=>{
         admins.forEach(async(admin)=>{
           const newNotification=new Notification({
             user: admin._id,
-            message: `New product added by ${user.name}`,
-            title:"New Product",
+            message: `New item added by ${user.name}`,
+            title:"New Item",
             onClick:'/admin',
             read: false
           });
@@ -157,15 +157,15 @@ router.put("/update-product-status/:id",authMiddleware,async(req,res)=>{
     //send notification to seller
     const newNotification=new Notification({
       user: updatedProduct.seller,
-      message: `Your product ${updatedProduct.name} has been ${status}`,
-      title: "Product status updated",
+      message: `Your item ${updatedProduct.name} has been ${status}`,
+      title: "Item status updated",
       onClick: '/profile',
       read: false
     });
     await newNotification.save();
     res.send({
       success: true,
-      message: "Product status updated successfully",
+      message: "Item status updated successfully",
     });
   }
   catch(error){

@@ -134,6 +134,10 @@ function ProductInfo() {
                       <span>₹{bid.bidAmount}</span>
                     </div>
                     <div className="flex justify-between text-gray-600">
+                      <span>Phone Number</span>
+                      <span>{bid.mobile}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
                       <span>Bid Placed On</span>
                       <span>{
                         moment(bid.createdAt).format("MMM D, YYYY hh:mm A")}</span>
