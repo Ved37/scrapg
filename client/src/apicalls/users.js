@@ -52,3 +52,17 @@ export const UpdateUserStatus=async(id,status)=>{
         return error.message;
     }
 }
+
+//change password
+export const ChangeUserPassword = async (email, oldpassword, newpassword) => {
+    try {
+      const response = await axiosInstance.post('/api/users/change-password', {
+        email,
+        oldpassword,
+        newpassword,
+      });
+      return response.data;
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  };

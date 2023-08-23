@@ -126,3 +126,27 @@ router.put("/update-user-status/:id",authMiddleware,async(req,res)=>{
   }
 });
 module.exports = router;
+
+//change password
+router.post('/change-password',authMiddleware, async (req,res)=>{
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    const validPassword = await bcrypt.compare(req.body.oldpassword, user.password);
+    if (!validPassword) {
+      throw new Error('Current password is incorrect');
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedNewPassword = await bcrypt.hash(req.body.newpassword, salt);
+    user.password = hashedNewPassword;
+    await user.save();
+    res.send({
+      success: true,
+      message: 'Password changed successfully',
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+})

@@ -1,11 +1,13 @@
-import React from 'react'
-import { Tabs } from 'antd'
+import React, { useState } from 'react'
+import { Button, Tabs } from 'antd'
 import Products from './Products'
 import UserBids from './UserBids'
 import { useSelector } from 'react-redux'
 import moment from 'moment';
+import PasswordModal from './PasswordModal'
 function Profile() {
     const {user}=useSelector((state)=>state.users);
+  const [showChangePass,setShowChangePass]=useState(false);
   return (
     <div>
         <Tabs defaultActiveKey='1'>
@@ -27,8 +29,15 @@ function Profile() {
                         Created At: <span className='text-xl'>{moment(user.createdAt).format("MMM D, YYYY hh:mm A")}</span>
                     </span>
                 </div>
+                    <div className='flex'><Button className='bg-primary text-white'
+                    onClick={()=>setShowChangePass(!showChangePass)}
+                    >Change Password</Button></div>
             </Tabs.TabPane>
         </Tabs>
+        {showChangePass && <PasswordModal
+          showPassModal={showChangePass}
+          setShowPassModal={setShowChangePass}
+          />}
     </div>
   )
 }
