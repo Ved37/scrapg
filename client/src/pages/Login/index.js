@@ -59,15 +59,21 @@ function Login() {
         </h1>
         <Divider />
         <Form layout="vertical" onFinish={onFinish}>
-          <Form.Item label="Email" name="email" rules={email_rules}>
-            <Input placeholder="Email" defaultValue="vedprajapati@gmail.com" />
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={email_rules}
+            initialValue="vedprajapati37@gmail.com"
+          >
+            <Input placeholder="Email" />
           </Form.Item>
-          <Form.Item label="Password" name="password" rules={pass_rules}>
-            <Input
-              type="password"
-              placeholder="Password"
-              defaultValue="ved123@37"
-            />
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={pass_rules}
+            initialValue="ved123@37"
+          >
+            <Input type="password" placeholder="Password" />
           </Form.Item>
           <Button className="mt-2" type="primary" htmlType="submit" block>
             Login
